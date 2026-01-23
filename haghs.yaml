@@ -1,55 +1,68 @@
-# HAGHS - Home Assistant Global Health Score v1.1
+# HAGHS - Home Assistant Global Health Score v1.2
 # Naming Convention: Area: Object - Function
 
 - sensor:
-    - name: "System: HA - Global Health Score"
-      unique_id: system_ha_global_health_score
-      state: >
-        {# --- DATA COLLECTION --- #}
-        {% set cpu = states('sensor.system_monitor_YOUR_ID') | float(0) %}
-        {% set mem = states('sensor.system_monitor_YOUR_ID') | float(0) %}
-        {% set disk = states('sensor.system_monitor_YOUR_ID') | float(0) %}
-        {% set backup_stale = is_state('binary_sensor.backups_stale', 'on') %}
-        {% set updates = states.update | selectattr('state', 'eq', 'on') | list | count %}
-        {% set notifications = states.persistent_notification | list | count %}
-        {% set zombies = states 
+      - name: "System: HA - Global Health Score"
+        unique_id: system_ha_global_health_score
+        icon: mdi:shield-check
+        unit_of_measurement: "%"
+        state: >
+          {# === CONFIGURATION: SET YOUR ENTITY IDs HERE === #}
+          {% set cpu_id = 'sensor.processor_use' %}
+          {% set ram_id = 'sensor.memory_use_percent' %}
+          {% set disk_id = 'sensor.disk_use_percent_home' %}
+          {# ============================================== #}
+
+          {# 1. PILLAR: HARDWARE (40%) #}
+          {% set cpu = states(cpu_id) | float(0) %}
+          {% set ram = states(ram_id) | float(0) %}
+          {% set disk = states(disk_id) | float(0) %}
+
+          {% set cpu_score = ([0, (100 - (cpu * 0.2)), 100] | sort)[1] %}
+          {% set ram_score = 100 if ram < 70 else ([0, (100 - (ram - 70) * 3.33), 100] | sort)[1] %}
+          {% set disk_score = ([0, (100 - (disk * 1.25)), 100] | sort)[1] %}
+          {% set hardware_final = (cpu_score + ram_score + disk_score) / 3 %}
+
+          {# 2. PILLAR: APPLICATION (60%) #}
+          {% set zombies = states.all 
             | selectattr('state', 'in', ['unavailable', 'unknown']) 
-            | rejectattr('domain', 'in', ['button', 'scene', 'group', 'input_button', 'device_tracker', 'automation', 'script', 'update']) 
-            | list | count %}
+            | rejectattr('domain', 'in', ['button', 'scene', 'automation', 'device_tracker', 'group', 'input_button']) 
+            | list %}
+          
+          {% set zombie_count = zombies | count %}
+          {% set zombie_penalty = ([0, (zombie_count * 2), 20] | sort)[1] %}
+          
+          {# Safety Net: Backups & Updates #}
+          {% set backup_stale = 30 if is_state('binary_sensor.backups_stale', 'on') else 0 %}
+          {% set update_pending = 5 if states('sensor.home_assistant_versions') != states('sensor.current_version') else 0 %}
+          
+          {% set app_final = 100 - zombie_penalty - backup_stale - update_pending %}
 
-        {# --- SCORE CALCULATION --- #}
-        {% set hw = 100 - (cpu * 0.2) - ([(mem - 70) * 0.5, 0] | max) - ([(disk - 80) * 1.0, 0] | max) %}
-        {% set hw_final = [0, hw] | max %}
-        
-        {% set zombie_penalty = [(zombies / 5) | round(0), 20] | min %}
-        {% set app = 100 - (updates * 5) - (notifications * 5) - (30 if backup_stale else 0) - zombie_penalty %}
-        {% set app_final = [0, app] | max %}
+          {# FINAL GLOBAL CALCULATION #}
+          {{ ((hardware_final * 0.4) + (app_final * 0.6)) | round(0) }}
 
-        {{ ((hw_final * 0.4) + (app_final * 0.6)) | round(0) }}
-
-      attributes:
-        recommendations: >
-          {% set backup_stale = is_state('binary_sensor.backups_stale', 'on') %}
-          {% set updates = states.update | selectattr('state', 'eq', 'on') | list | count %}
-          {% set zombies = states | selectattr('state', 'in', ['unavailable', 'unknown']) | rejectattr('domain', 'in', ['button', 'scene', 'group', 'input_button', 'device_tracker', 'automation', 'script', 'update']) | list | count %}
-          {% set notifications = states.persistent_notification | list | count %}
-          {% set mem = states('sensor.system_monitor_YOUR_ID') | float(0) %}
-          {% set disk = states('sensor.system_monitor_YOUR_ID') | float(0) %}
-          {% set recs = [] %}
-          {% if backup_stale %}{% set recs = recs + ["🚨 Backup is stale! Run a backup now to gain +30 pts."] %}{% endif %}
-          {% if updates > 0 %}{% set recs = recs + ["📦 Install " ~ updates ~ " pending updates to gain +" ~ (updates * 5) ~ " pts."] %}{% endif %}
-          {% if zombies > 10 %}{% set recs = recs + ["🧟 Review " ~ zombies ~ " zombie entities."] %}{% endif %}
-          {% if mem > 85 %}{% set recs = recs + ["🧠 High RAM! Restart Supervisor to clear leak."] %}{% endif %}
-          {% if disk > 85 %}{% set recs = recs + ["💾 Disk nearly full! Clean up old logs."] %}{% endif %}
-          {% if notifications > 0 %}{% set recs = recs + ["🔔 Clear " ~ notifications ~ " persistent notifications."] %}{% endif %}
-          {% if recs | count == 0 %}{{ "✅ Everything looks perfect! No action needed." }}{% else %}{{ recs | join(' ') }}{% endif %}
-        cpu_usage: "{{ states('sensor.system_monitor_YOUR_ID') }}%"
-        memory_usage: "{{ states('sensor.system_monitor_YOUR_ID') }}%"
-        disk_usage: "{{ states('sensor.system_monitor_YOUR_ID') }}%"
-        last_updated: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
-      icon: >
-        {% set s = this.state | int(0) %}
-        {% if s >= 90 %} mdi:shield-check
-        {% elif s >= 75 %} mdi:shield-alert
-        {% else %} mdi:shield-remove
-        {% endif %}
+        attributes:
+          zombie_entities: >
+            {# This creates a comma-separated list of the actual problematic entities #}
+            {% set zombies = states.all 
+              | selectattr('state', 'in', ['unavailable', 'unknown']) 
+              | rejectattr('domain', 'in', ['button', 'scene', 'automation', 'device_tracker', 'group', 'input_button']) 
+              | map(attribute='entity_id') | list %}
+            {{ zombies | join(', ') if zombies | count > 0 else 'None' }}
+          
+          recommendations: >
+            {% set cpu = states('sensor.processor_use') | float(0) %}
+            {% set disk = states('sensor.disk_use_percent_home') | float(0) %}
+            {% set z_count = states.all 
+              | selectattr('state', 'in', ['unavailable', 'unknown']) 
+              | rejectattr('domain', 'in', ['button', 'scene', 'automation', 'device_tracker', 'group', 'input_button']) 
+              | list | count %}
+            
+            {% set advice = [] %}
+            {% if cpu > 80 %}{% set advice = advice + ["⚠️ High CPU: Check for rogue Add-ons."] %}{% endif %}
+            {% if disk > 85 %}{% set advice = advice + ["⚠️ Disk Space: Purge database or old backups."] %}{% endif %}
+            {% if z_count > 0 %}{% set advice = advice + ["⚠️ Registry: " ~ z_count ~ " zombie entities detected."] %}{% endif %}
+            {% if is_state('binary_sensor.backups_stale', 'on') %}{% set advice = advice + ["🚨 Security: Stale backup detected!"] %}{% endif %}
+            
+            {{ advice | join('\n') if advice | count > 0 else "✅ System Optimized." }}
+            
