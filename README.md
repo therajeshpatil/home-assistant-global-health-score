@@ -97,3 +97,9 @@ cards:
       **Entities to check:**
       {{ state_attr('sensor.system_ha_global_health_score', 'zombie_entities') }}
       {% endif %}
+
+```
+---
+
+### 🤖 AI Disclosure
+This project was developed in collaboration with **Gemini (Google AI)**. While the architectural concept and "Fair-Play" logic were designed by the project author, the AI assisted in code optimization, standardized naming conventions, and documentation formatting.
