@@ -3,6 +3,7 @@
 
 [![HAGHS Standard](https://img.shields.io/badge/HAGHS-Standard-blue?style=for-the-badge&logo=home-assistant&logoColor=white)](https://github.com/d-n91/home-assistant-global-health-score)
 [![Release](https://img.shields.io/badge/Version-1.1.0-green?style=for-the-badge)](https://github.com/d-n91/home-assistant-global-health-score/releases)
+[![My HAGHS Score](https://img.shields.io/badge/HAGHS-87%20%2F%20100-brightgreen?style=flat-square&logo=home-assistant)](https://github.com/d-n91/home-assistant-global-health-score)
 
 ## 📄 Abstract
 As Home Assistant matures into a mission-critical Smart Home OS, the need for a unified stability metric becomes paramount. **HAGHS** is a logical framework designed to provide an objective **Health Index (0-100)**. It differentiates between transient hardware load and chronic maintenance neglect, providing users with a "North Star" for instance optimization.
@@ -66,6 +67,8 @@ To implement the HAGHS reference sensor in your instance, follow these steps:
 * **Entity Alignment**: Open the code and update the sensor entity IDs in the **Data Collection** and the **recommendations** section to match your system's specific entity names.
 
 * **Reload**: Navigate to **Developer Tools > YAML** and click on **Templates** to initialize the sensor.
+
+**🏆 Show Your Score** [![My HAGHS Score](https://img.shields.io/badge/HAGHS-87%20%2F%20100-brightgreen?style=flat-square&logo=home-assistant)](https://github.com/d-n91/home-assistant-global-health-score)
 
 ---
 
