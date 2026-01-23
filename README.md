@@ -58,7 +58,7 @@ Every HAGHS implementation includes a `recommendations` attribute. This engine p
 ## 🚀 Deployment & Usage
 To implement the HAGHS reference sensor in your instance, follow these steps:
 
-* **Requirements**: Ensure the System Monitor integration is active with sensors for **CPU**, **RAM**, and **Disk usage** enabled.
+* **Requirements**: Ensure the **System Monitor** integration is active with sensors for **CPU**, **RAM**, and **Disk usage** enabled.
 
 * **Copy Code**: Download the haghs.yaml file from this repository.
 
