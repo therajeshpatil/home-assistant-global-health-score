@@ -76,7 +76,12 @@
 
   ## Deployment & Usage
 
-  ### 1. Prerequisites (New in v2.0)
+  ### 1. Prerequisites
+
+  **A. System Monitor:**
+  Ensure the **System Monitor** integration is installed via **Settings > Devices & Services**. This is required to provide the CPU, RAM, and Disk sensors for the hardware pillar.
+  
+  **B. Database & Log Access (New in v2.0):**
   To monitor Database and Logs, you must allow external directory access. Add this to your `configuration.yaml` and restart:
   ```yaml
   homeassistant:
