@@ -2,7 +2,7 @@
   **A Technical Specification for System Stability and Hygiene Standardized Monitoring.**
 
   [![HAGHS Standard](https://img.shields.io/badge/HAGHS-Standard-blue?style=for-the-badge&logo=home-assistant&logoColor=white)](https://github.com/d-n91/home-assistant-global-health-score)
-  [![Release](https://img.shields.io/badge/Version-2.0.0-green?style=for-the-badge)](https://github.com/d-n91/home-assistant-global-health-score/releases)
+  [![Release](https://img.shields.io/badge/Version-2.0.2-green?style=for-the-badge)](https://github.com/d-n91/home-assistant-global-health-score/releases)
   [![My HAGHS Score](https://img.shields.io/badge/HAGHS-86%20%2F%20100-brightgreen?style=for-the-badge&logo=home-assistant)](https://github.com/d-n91/home-assistant-global-health-score)
   ![AI-Powered](https://img.shields.io/badge/Developed%20with-AI-blue?style=for-the-badge&logo=google-gemini&logoColor=white)
 
@@ -81,8 +81,8 @@
   **A. System Monitor:**
   Ensure the **System Monitor** integration is installed via **Settings > Devices & Services**. This is required to provide the CPU, RAM, and Disk sensors for the hardware pillar.
   
-  **B. Database & Log Access (New in v2.0):**
-  To monitor Database and Logs, you must allow external directory access. Add this to your `configuration.yaml` and restart:
+  **B. Database Access (Essential):**
+  To monitor your database size (the most critical performance factor), add this to your `configuration.yaml` and restart:
   ```yaml
   homeassistant:
     allowlist_external_dirs:
@@ -90,7 +90,11 @@
   ```
   After restarting, add the **File Size** integration via Settings and track:
   * `/config/home-assistant_v2.db`
-  * `/config/home-assistant.log`
+
+  **C. Log File Access (Optional / Advanced):**
+  *Standard users can skip this step.*
+  By default, Home Assistant OS does not create a physical log file to protect SD cards. If you are an advanced user and want to monitor log spam via HAGHS, you must enable file logging via the Terminal CLI (`ha core options --log-file=true`).
+  If you skip this, HAGHS will simply ignore the log-size penalty (graceful degradation).
 
   ### 2. Installation
   1.  Download [`haghs.yaml`](./haghs.yaml).
@@ -138,6 +142,9 @@ cards:
   ---
 
   ## Changelog
+
+### [v2.0.2] - 2026-01-26
+  * **Refinement:** Made Log File monitoring explicitly optional. The system now gracefully handles missing log sensors for HAOS users who prefer not to use the CLI.
 
   ### [v2.0.0] - 2026-01-26
   * **Major:** Added **Database Hygiene** monitoring (File Size).
