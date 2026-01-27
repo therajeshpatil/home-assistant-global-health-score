@@ -124,7 +124,7 @@ type: vertical-stack
 cards:
   - type: gauge
     entity: sensor.system_ha_global_health_score
-    name: HAGHS Index
+    name: HAGHS
     needle: true
     severity:
       green: 90
