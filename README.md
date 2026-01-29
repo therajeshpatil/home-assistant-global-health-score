@@ -1,125 +1,103 @@
-  # HAGHS: Home Assistant Global Health Score
-  **A Technical Specification for System Stability and Hygiene Standardized Monitoring.**
+## HAGHS: Home Assistant Global Health Score
+**A Technical Specification for System Stability and Hygiene Standardized Monitoring.**
 
-  [![HAGHS Standard](https://img.shields.io/badge/HAGHS-Standard-blue?style=for-the-badge&logo=home-assistant&logoColor=white)](https://github.com/d-n91/home-assistant-global-health-score)
-  [![Release](https://img.shields.io/badge/Version-2.1.1-green?style=for-the-badge)](https://github.com/d-n91/home-assistant-global-health-score/releases)
-  [![My HAGHS Score](https://img.shields.io/badge/HAGHS-86%20%2F%20100-brightgreen?style=for-the-badge&logo=home-assistant)](https://github.com/d-n91/home-assistant-global-health-score)
-  ![AI-Powered](https://img.shields.io/badge/Developed%20with-AI-blue?style=for-the-badge&logo=google-gemini&logoColor=white)
+[![HAGHS Standard](https://img.shields.io/badge/HAGHS-Standard-blue?style=for-the-badge&logo=home-assistant&logoColor=white)](https://github.com/d-n91/home-assistant-global-health-score)
+[![Release](https://img.shields.io/badge/Version-2.1.1-green?style=for-the-badge)](https://github.com/d-n91/home-assistant-global-health-score/releases)
+ [![My HAGHS Score](https://img.shields.io/badge/HAGHS-86%20%2F%20100-brightgreen?style=for-the-badge&logo=home-assistant)](https://github.com/d-n91/home-assistant-global-health-score)
+![AI-Powered](https://img.shields.io/badge/Developed%20with-AI-blue?style=for-the-badge&logo=google-gemini&logoColor=white)
 
-  ## Abstract
-  As Home Assistant matures into a mission-critical Smart Home OS, the need for a unified stability metric becomes paramount. **HAGHS** is a logical framework designed to provide an objective **Health Index (0-100)**. It differentiates between transient hardware load and chronic maintenance neglect, providing users with a "North Star" for instance optimization.
+## Abstract
+As Home Assistant matures into a mission-critical Smart Home OS, the need for a unified stability metric becomes paramount. **HAGHS** is a logical framework designed to provide an objective **Health Index (0-100)**. It differentiates between transient hardware load and chronic maintenance neglect, providing users with a "North Star" for instance optimization.
 
-  ---
+---
 
-  ## The HAGHS Standard (v2.1.1)
+## The HAGHS Standard (v2.1.1)
 
-  The index is calculated via a weighted average of two core pillars, prioritizing long-term software hygiene over temporary hardware fluctuations.
+The index is calculated via a weighted average of two core pillars, prioritizing long-term software hygiene over temporary hardware fluctuations.
 
-  ### The Global Formula
+### The Global Formula
 
-  $$Score_{Global} = \lfloor (Score_{Hardware} \cdot 0.4) + (Score_{Application} \cdot 0.6) \rfloor$$
+$$Score_{Global} = \lfloor (Score_{Hardware} \cdot 0.4) + (Score_{Application} \cdot 0.6) \rfloor$$
 
-  *Note: We use **Floor Rounding** (Integer) to ensure a "Perfect 100" is only achieved by truly optimized systems. Even a minor penalty will drop the score to 99.*
+*Note: We use **Floor Rounding** (Integer) to ensure a "Perfect 100" is only achieved by truly optimized systems. Even a minor penalty will drop the score to 99.*
 
-  ---
+---
 
-  ## Pillar 1: Hardware Performance (40%)
+## Pillar 1: Hardware Performance (40%)
 
-  The Hardware Score evaluates the physical constraints of the host machine. It uses **Heavyweight CPU Tiers** to penalize background noise that impacts system responsiveness.
+Evaluates the physical constraints of the host machine. It uses tiered penalties to filter out background noise while flagging genuine resource exhaustion.
 
-  ### Logic & Constraints
-  * **CPU Load (Tiered):**
-    * 0-10%: **0 pts** (Ideal)
-    * 11-15%: **-10 pts**
-    * 16-25%: **-25 pts**
-    * 26-50%: **-50 pts**
-    * 50% and more: **-80 pts**
-  * **Memory Pressure:** Non-linear deduction. Penalties only apply above **70% usage** to respect native Supervisor overhead.
-  * **Storage Integrity:** Critical deduction when disk usage exceeds **80%**, escalating as the system nears the 95% "database-locking" threshold.
+* **CPU Load (Tiered):** Penalties start at **>10% usage** to ensure responsiveness.
+* **Memory Pressure:** Deductions apply above **70% usage** to respect native Supervisor overhead.
+* **Storage Integrity:** Critical deduction when disk usage exceeds **80%**, escalating as the system nears the 95% threshold.
 
-  ---
+---
 
-  ## Pillar 2: Application Hygiene (60%)
+## Pillar 2: Application Hygiene (60%)
 
-  The Application Score measures the "maintenance debt" of the instance. v2.0 introduces strict monitoring for database size and log flooding.
+Measures "maintenance debt"—the hidden factors that cause sluggishness, failed backups, and slow restarts.
 
-  ### The "Fair-Play" Engine
-  To remain useful for complex environments, HAGHS implements **Penalty Capping** and **Smart Filtering**:
+* **Zombie Entities:** Monitors `unavailable` or `unknown` states (Capped at 20 pts).
+* **Database Hygiene:** Penalizes `home-assistant_v2.db` growth (>1GB Warning / >2.5GB Critical).
+* **Updates & Core Age:** Tracks pending updates and penalizes a "Core Version Lag" of >2 months.
+* **Safety Net:** A static **30-point deduction** for stale backups.
 
-  * **Zombie Entities:** Checks for `unavailable` or `unknown` states.
-    * *Filter:* Entities or Devices marked with the `haghs_ignore` label are automatically whitelisted.
-    * *Cap:* Max deduction of **20 points**.
-  * **Database Hygiene:** Monitors `home-assistant_v2.db` size.
-    * *Warning:* > 1.0 GB (**-10 pts**)
-    * *Critical:* > 2.5 GB (**-30 pts**)
-  * **Log Hygiene:** Monitors `home-assistant.log` size (spam/error detection).
-    * *Warning:* > 20 MB (**-10 pts**)
-    * *Critical:* > 100 MB (**-25 pts**)
-  * **Updates & Core Age:**
-    * *Standard:* **-5 pts** per pending update.
-    * *Core Age:* Additional **-20 pts** if Home Assistant Core is > 2 months behind.
-    * *Max Penalty:* Capped at **-35 pts**.
-  * **Safety Net:** A static **30-point deduction** for stale backups.
+---
 
-  ---
+## Configuration (The UI Way)
 
-  ## Implementation Standards
+HAGHS is installed as a **HACS Custom Repository** and configured via a **Setup Mask (UI)**. 
 
-  ### Naming Convention
-  To ensure registry organization, all HAGHS entities follow the professional standard:
-  `Area: Object - Function` (e.g., `sensor.system_ha_global_health_score`).
+### 1. Prerequisites (Prepare your Sensors)
 
-  ### The Advisor Logic
-  Every HAGHS implementation includes a `recommendations` attribute. This engine parses sub-score failures and provides readable repair steps directly in the dashboard.
+**A. System Monitor:**
+Install the **System Monitor** integration. Ensure these specific sensors are **enabled**:
+* `sensor.processor_use` (Percentage %)
+* `sensor.memory_use_percent` (Percentage %)
+* `sensor.disk_use_percent_home` (Percentage %)
 
-  ---
+**B. Database Sensor (SQLite / Standard):**
+To allow Home Assistant to see its own database size, add this to your `configuration.yaml` and restart:
 
-  ## Deployment & Usage
+```yaml
+homeassistant:
+  allowlist_external_dirs:
+    - "/config"
+```
 
-  ### 1. Prerequisites
+**After the restart:**
+1.  Go to **Settings > Integrations > Add Integration**.
+2.  Search for **File Size** and set the path to: `/config/home-assistant_v2.db`.
 
-  **A. System Monitor:**
-  Ensure the **System Monitor** integration is installed via **Settings > Devices & Services**. This is required to provide the CPU, RAM, and Disk sensors for the hardware pillar.
-  
-  **B. Database Access (Essential):**
-  To monitor your database size (the most critical performance factor), add this to your `configuration.yaml` and restart:
-  ```yaml
-  homeassistant:
-    allowlist_external_dirs:
-      - "/config"
-  ```
-  After restarting, add the **File Size** integration via Settings and track:
-  * `/config/home-assistant_v2.db`
+*Note: For MariaDB/Postgres, create a SQL sensor that returns the size in MB.*
 
-  **C. Log File Access (Optional / Advanced):**
-  *Standard users can skip this step.*
-  By default, Home Assistant OS does not create a physical log file to protect SD cards. If you are an advanced user and want to monitor log spam via HAGHS, you must:
-  1. Enable file logging via the Terminal CLI (`ha core options --log-file=true` followed by `ha core restart`).
-  2. **Crucial:** Once restarted, go to the **File Size** integration settings and add the path `/config/home-assistant.log` to be tracked.
-  
-  If you skip this, HAGHS will simply ignore the log-size penalty (graceful degradation).
+### 2. Installation & Setup
+1.  Add this repo to **HACS** (Custom Repository, Category: Integration).
+2.  Download and **Restart Home Assistant**.
+3.  Go to **Settings > Integrations > Add Integration** and search for **HAGHS**.
+4.  Follow the setup mask to select your sensors. 
 
-  ### 2. Installation
-  1.  Download [`haghs.yaml`](./haghs.yaml).
-  2.  Paste it into your `template.yaml` (or configuration).
-  3.  **Single-Point Config:** Update the entity IDs in the `variables:` block at the top of the file to match your system.
+**⚠️ Log File Deprecation:** We are phasing out Log File monitoring to streamline the integration. In the setup mask, please **leave the log file field empty** to skip this check.
 
-  ### 3. Label Configuration
-  To prevent false positives (e.g., sleeping tablets or battery devices):
-  1.  Go to **Settings > Devices & Services > Labels**.
-  2.  Create a label named `haghs_ignore`.
-  3.  Assign this label to any Device or Entity you want HAGHS to ignore.
+---
 
-  ---
+## Label Configuration (Smart Whitelisting)
+To prevent false positives from sleeping tablets or seasonal devices:
+1.  Go to **Settings > Devices & Services > Labels**.
+2.  Create a label named `haghs_ignore`.
+3.  Assign this label to any **Device** or **Entity**. 
+    * **Pro Tip:** Assigning the label to a **Device** automatically whitelists **all underlying entities** belonging to that specific device.
 
-  ## UI Integration Example
+---
 
-![HAGHS Dashboard example](https://github.com/user-attachments/assets/f1457b91-65a8-4822-8129-a1be86f793bf)
+## UI Integration Example
+
+![HAGHS Dashboard example](https://github.com/user-attachments/assets/c3efb257-7350-4612-b9eb-caebd8e93674)
 
 
-  Recommended configuration for a clean frontend display.
+Recommended configuration for a clean frontend display:
 
-  ```yaml
+```yaml
 type: vertical-stack
 cards:
   - type: gauge
@@ -139,31 +117,30 @@ cards:
       'zombie_entities') %} {% if z_list and z_list != 'None' %} **⚠️ Zombie
       Entities:** {{ z_list.split(',') | count }} detected *(Check attributes to
       see full list)* {% endif %}
+```
 
-  ```
+---
 
-  ---
+## Changelog
 
-  ## Changelog
+### [v2.1.1] - 2026-01-29
+* **UI Migration:** Transitioned from YAML variables to a full **Config Flow (Setup Mask)**.
+* **Optimization:** `haghs_ignore` label on a Device now automatically covers all its entities.
 
 ### [v2.0.2] - 2026-01-26
-  * **Refinement:** Made Log File monitoring explicitly optional. The system now gracefully handles missing log sensors for HAOS users who prefer not to use the CLI.
+* **Refinement:** Made Log File monitoring explicitly optional to support HAOS users without CLI access.
 
-  ### [v2.0.0] - 2026-01-26
-  * **Major:** Added **Database Hygiene** monitoring (File Size).
-  * **Major:** Added **Log File Hygiene** monitoring (File Size).
-  * **Feature:** Implemented **Deep Label Support**. Defining `haghs_ignore` on a Device now automatically whitelists all underlying entities.
-  * **Logic:** Added **Core Age** penalty. Severe score drop if Core version lags by >2 months.
-  * **Logic:** Added **Cumulative Update** counting (capped at 35 pts).
-  * **Refinement:** Removed hardcoded regex filters in favor of the label system.
+### [v2.0.0] - 2026-01-26
+* **Major:** Added **Database & Log Hygiene** monitoring.
+* **Feature:** Implemented **Deep Label Support**.
+* **Logic:** Added **Core Age** penalty (>2 months lag).
+* **Logic:** Added **Cumulative Update** counting (capped at 35 pts).
 
-  ### [v1.3.0] - 2026-01-24
-  * **NEW:** Implemented Single-Point Configuration using Template Variables.
-  * **NEW:** Added Heavyweight CPU Tiers for stricter health assessment.
-  * **Fixed:** Switched to Integer rounding (Floor) for a more honest score.
-  * **Fixed:** Disk threshold moved to 80% to avoid premature penalties.
-    
-  ---
+### [v1.3.0] - 2026-01-24
+* **NEW:** Implemented Single-Point Configuration using Template Variables.
+* **NEW:** Added Heavyweight CPU Tiers.
+* **Fixed:** Switched to **Floor Rounding** (Integer) for a more honest health assessment.
 
-  **AI Disclosure**
-  This project was developed in collaboration with **AI**. While the architectural concept and logic were designed by me, the AI assisted in code optimization, standardized naming conventions, and documentation formatting.
+---
+
+**AI Disclosure:** While the architectural concept and logic are my own, I utilized AI to assist with code optimization and documentation formatting.
