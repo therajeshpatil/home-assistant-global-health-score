@@ -119,11 +119,6 @@ cards:
     content: >
       **🛡️ Advisor Recommendations:** {{
       state_attr('sensor.system_ha_global_health_score', 'recommendations') }}
-
-      {% set z_list = state_attr('sensor.system_ha_global_health_score',
-      'zombie_entities') %} {% if z_list and z_list != 'None' %} **⚠️ Zombie
-      Entities:** {{ z_list.split(',') | count }} detected *(Check attributes to
-      see full list)* {% endif %}
 ```
 ---
 
