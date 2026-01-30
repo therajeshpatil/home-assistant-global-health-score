@@ -99,8 +99,7 @@ To prevent false positives from sleeping tablets or seasonal devices:
 
 ## UI Integration Example
 
-![HAGHS Dashboard example](https://github.com/user-attachments/assets/c3efb257-7350-4612-b9eb-caebd8e93674)
-
+![NEW HAGHS Dashboard card](https://github.com/user-attachments/assets/ac4dbcf8-94b3-40a5-8835-e81853aa8c9f)
 
 Recommended configuration for a clean frontend display:
 
@@ -117,10 +116,31 @@ cards:
       red: 0
   - type: markdown
     content: >
-      {% set recs = state_attr('sensor.system_ha_global_health_score',
-      'recommendations') %} **🛡️ Advisor Recommendations:** {{ recs |
-      replace('Zombies detected', 'Zombies detected (Check attributes to see
-      full list)') if recs else 'Your system is in top shape!' }}
+      {% set entity_id = 'sensor.system_ha_global_health_score' %}  {% set
+      recommendations = state_attr(entity_id, 'recommendations') %}  {% set
+      z_raw = state_attr(entity_id, 'zombie_entities') | default('', true) %}
+
+      ### 🛡️ Advisor Recommendations  {% if recommendations not in [none,
+      'unknown', 'unavailable', 'none'] %}
+        {{ recommendations }}
+      {% elif states(entity_id) in ['unavailable', 'unknown'] %}
+        ⚠️ **Error:** Health Advisor sensor is offline.
+      {% else %}
+        ✅ System healthy. No recommendations.
+      {% endif %}
+
+      ---
+
+      {% if z_raw not in ['None', '', none] %}
+        {% set z_list = z_raw.split(',') | map('trim') | select('search', '\\.') | list %}
+        {% set grouped_zombies = expand(z_list) | groupby('domain') %}
+      <details> <summary><b>Zombie Domains: {{ grouped_zombies |
+      length}}</b></summary> {% for d in grouped_zombies %}<br>  <details>
+      <summary>{{- d[0] | title }}: <b>{{ d[1] | count }}</b></summary> {% for i
+      in d[1] -%} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; • {{ i.name }}: <b>{{ i.state
+      }}</b><br>  {% endfor %}  </details>  {% endfor %} </details>  {% else %} 
+      ✅ **No zombie entities detected.** {% endif %}
+
 ```
 ---
 
